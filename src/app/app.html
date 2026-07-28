@@ -1,0 +1,52 @@
+<div class="vjs-fwc-app-container">
+  <app-header [year]="fifaService.year()" (onViewChange)="setCurrentView($event)"></app-header>
+  <div class="vjs-fwc-main">
+      <div class="vjs-fwc-main-body">
+          @if (currentView() === 'group-stage') {
+            <app-group-stage [showStatsTable]="false"></app-group-stage>
+          }
+          @if (currentView() === 'tournament') {
+            <app-tournament></app-tournament>
+          }
+          @if (currentView() === 'teams') {
+            <div style="display:flex; height:100%">
+              <div style="flex:1 0 50%; height:100%; border:1px solid; border-radius:5px; overflow:auto">
+                <app-teams-list [selectedTeam]="fifaService.selectedTeam()"></app-teams-list>
+              </div>
+              <div style="flex:1 0 50%; height:100%; border:1px solid; border-radius:5px; overflow:auto; margin:0 0.5rem">
+                <app-team-journey [team]="fifaService.selectedTeam()" title="Journey"></app-team-journey>
+                @if (fifaService.selectedTeam() == null) {
+                    <app-select-something msg="Select a team to view details"></app-select-something>
+                }
+              </div>
+            </div>
+          }
+      </div>
+      <div class="vjs-fwc-main-sidebar">
+
+          @if (currentView() === 'group-stage') {
+              <app-team-viewer [team]="fifaService.selectedTeam()"></app-team-viewer>
+              <app-squad-viewer [squad]="fifaService.selectedSquad()"></app-squad-viewer>
+              @if (fifaService.selectedTeam() == null && fifaService.selectedSquad() == null) {
+                  <app-select-something msg="Select a team to view details"></app-select-something>
+              }
+          }
+
+          @if (currentView() === 'teams') {
+              @if (fifaService.selectedMatch()) {
+                <app-match-viewer [match]="fifaService.selectedMatch()"></app-match-viewer>
+                <hr/>
+              }
+              <app-team-viewer [team]="fifaService.selectedTeam()"></app-team-viewer>
+              <app-squad-viewer [squad]="fifaService.selectedSquad()"></app-squad-viewer>
+              @if (fifaService.selectedTeam() == null && fifaService.selectedSquad() == null) {
+                  <app-select-something msg="Select a team to view details"></app-select-something>
+              }
+          }
+
+          @if (currentView() === 'tournament') {
+                <app-match-viewer [match]="fifaService.selectedMatch()"></app-match-viewer>
+          }
+      </div>
+  </div>
+</div>
